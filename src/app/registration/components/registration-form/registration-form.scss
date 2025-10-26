@@ -1,0 +1,83 @@
+.form-container {
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+}
+
+.has-error {
+
+  input,
+  fieldset,
+  select {
+    &:focus {
+      outline-color: red;
+    }
+
+    &:not(:focus) {
+      border: 1px solid red;
+    }
+  }
+}
+
+.registration-form {
+  // width: 400px;
+}
+
+.actions-block {
+  margin: 20px 0;
+
+  button {
+    padding: 5px;
+    width: 100%;
+    border-radius: 5px;
+    color: white;
+    background-color: cornflowerblue;
+    border: 1px solid cornflowerblue;
+
+    &:disabled {
+      background-color: rgb(192, 211, 245);
+      border: 1px solid rgb(192, 211, 245);
+    }
+  }
+}
+
+.form-row {
+  margin-top: 10px;
+  width: 100%;
+
+  input {
+    width: 100%;
+    padding: 5px;
+  }
+
+  label>input {
+    display: inline;
+    width: unset;
+    margin-right: 5px;
+  }
+
+  fieldset {
+    label {
+      display: inline-block;
+      margin-right: 15px;
+    }
+  }
+
+  label {
+    display: block;
+    margin-bottom: 2px;
+  }
+
+  select {
+    margin-top: 5px;
+
+  }
+
+
+  &-error {
+    color: red;
+    font-size: 10px;
+    margin-top: 2px;
+
+  }
+}

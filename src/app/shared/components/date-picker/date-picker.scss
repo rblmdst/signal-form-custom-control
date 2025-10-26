@@ -1,0 +1,35 @@
+:host{
+  display: block;
+  margin-top: 5px;
+}
+label {
+  display: block;
+  margin-bottom: 2px;
+}
+
+.container {
+  display: flex;
+}
+
+.day-block,
+.month-block,
+.year-block {
+  label {
+    display: block;
+    margin-bottom: 2px;
+    font-size: 10px;
+    margin-left: 5px;
+  }
+
+  input,
+  select {
+    padding: 5px;
+  }
+}
+
+.format {
+  display: block;
+  margin-top: 2px;
+  font-size: 10px;
+  margin-left: 2px;
+}

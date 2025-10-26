@@ -1,0 +1,27 @@
+<div class="content">
+  <div class="form-container">
+    <form class="registration-form" (submit)="onSubmit($event)">
+      <!-- Username -->
+       @let userNameErrors = form.username().errors();
+       @let userNameTouched = form.username().touched();
+      <div class="form-row" [class.has-error]="userNameErrors.length && userNameTouched">
+        <label for="username">Username :</label>
+        <input [field]="form.username" type="text" id="username" />
+        @if(userNameErrors.length && userNameTouched){
+        <div class="form-row-error">
+          <app-list [list]="getErrors(userNameErrors)" />
+        </div>
+        }
+      </div>
+      <!-- Birth date -->
+      <app-date-picker [field]="form.birthDate" label="Birth date" />
+      <!-- Submit -->
+      <div class="actions-block">
+        <button [disabled]="form().invalid() || form().submitting()" type="submit">Subscribe</button>
+      </div>
+    </form>
+  </div>
+  <div>
+    {{ form().value() | json}}
+  </div>
+</div>

@@ -1,0 +1,20 @@
+<label for="day">{{ label() }} :</label>
+@let isDisabled = disabled();
+<div class="container">
+  <div class="day-block">
+    <input [disabled]="isDisabled" [(ngModel)]="day" maxlength="2" size="3" id="day" placeholder="DD" type="text" />
+  </div>
+  <div class="month-block">
+    <select [disabled]="isDisabled" [(ngModel)]="month" id="month">
+      <option value="" disabled>Month</option>
+      @for (month of months; track $index) {
+      <option [value]="month.value">{{ month.label }}</option>
+      }
+    </select>
+  </div>
+  <div class="year-block">
+    <input [disabled]="isDisabled" [(ngModel)]="year" maxlength="4" size="5" id="year" placeholder="YYYY" type="text" />
+  </div>
+</div>
+<div class="format">(DD/MM/YYYY)</div>
+{{ finalDate() }}
