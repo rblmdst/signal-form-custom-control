@@ -1,8 +1,9 @@
-import { Component, computed, effect, input, InputSignal, model, ModelSignal, OutputRef, signal, untracked } from '@angular/core';
+import { Component, computed, effect, input, linkedSignal, model, untracked } from '@angular/core';
 import { MONTHS } from './const';
 import { FormsModule } from '@angular/forms';
-import { FormValueControl, ValidationError, WithOptionalField } from '@angular/forms/signals';
+import { FormValueControl } from '@angular/forms/signals';
 
+const DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/
 @Component({
   selector: 'app-date-picker',
   imports: [FormsModule],
@@ -15,9 +16,28 @@ export class DatePicker implements FormValueControl<string> {
   readonly value = model<string>('');
   protected readonly months = MONTHS;
 
-  protected day = signal('');
-  protected month = signal('');
-  protected year = signal('');
+  protected day = linkedSignal<string, string>({
+    source: this.value,
+    computation: (value, previous) => (value && value.match(DATE_PATTERN) ? value.split('-')[2] : previous?.value || ''),
+  });
+
+  protected month = linkedSignal<string, string>({
+    source: this.value,
+    computation: (value, previous) => {
+      if(value && value.match(DATE_PATTERN) ) {
+        const month = value.split('-')[1]
+        const selectedMonthOption = MONTHS.find((m) => +m.value == +month);
+        const selectedMonthValue = selectedMonthOption?.value ?? '';
+        return selectedMonthValue;
+      }
+      return previous?.value || ''
+    },
+  });
+
+  protected year = linkedSignal<string, string>({
+    source: this.value,
+    computation: (value, previous) => (value && value.match(DATE_PATTERN) ? value.split('-')[0] : previous?.value || ''),
+  });
 
   // YYYY-MM-DD
   protected finalDate = computed(() => {
@@ -26,38 +46,43 @@ export class DatePicker implements FormValueControl<string> {
     const month = this.month();
     const year = this.year();
     if (day && month && year) {
-      return `${year}-${month}-${day2Digit}`;
+      const formated = `${year}-${month}-${day2Digit}`;
+      return formated.match(DATE_PATTERN) ? formated : ''
     }
     return '';
   });
 
-  // form -> control
-  updateFromOutside = effect(()=> {
-    console.log('updateFromOutside')
-    const value = this.value()
-    untracked(()=> {
-      if(value) {
-        const [year, month, day] = value.split("-")
-        const selectedMonthOption = MONTHS.find(m => +m.value == +month )
-        const selectedMonthValue = selectedMonthOption?.value ?? ""
-        this.year.set(year)
-        this.day.set(day)
-        this.month.set(selectedMonthValue)
+  // updateFromOutside is replaced by the
+  //  3 linkedSignal (day, month, year) above to avoid using effect
+
+  // form -> control 
+  /* protected updateFromOutside = effect(() => {
+    console.log('updateFromOutside');
+    const value = this.value();
+    untracked(() => {
+      if (value) {
+        const [year, month, day] = value.split('-');
+        const selectedMonthOption = MONTHS.find((m) => +m.value == +month);
+        const selectedMonthValue = selectedMonthOption?.value ?? '';
+        this.year.set(year);
+        this.day.set(day);
+        this.month.set(selectedMonthValue);
       } else {
-        this.year.set("")
-        this.day.set("")
-        this.month.set("")
+        this.year.set('');
+        this.day.set('');
+        this.month.set('');
       }
-    })
-  })
+    });
+  }); */
 
   // form <- control
-  syncWithOutside = effect(()=> {
-    const finalDate = this.finalDate()
-    console.log('syncWithOutside')
+  protected syncWithOutside = effect(() => {
+    const finalDate = this.finalDate();
+    console.log({finalDate})
+    console.log('syncWithOutside');
 
-    untracked(()=> {
-      this.value.set(finalDate)
-    })
-  })
+    untracked(() => {
+      this.value.set(finalDate);
+    });
+  });
 }
