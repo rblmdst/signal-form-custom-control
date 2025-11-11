@@ -15,7 +15,7 @@ import { DatePicker } from '../../../shared/components/date-picker/date-picker';
 const getInitialValue = (): RegisterFormData => {
   return {
     username: '',
-    birthDate: '2022-01-01',
+    birthDate: '2022-09-02',
   };
 };
 

@@ -21,3 +21,9 @@ export const getYearsToAllowAgeBetween = (minAge: number, maxAge: number) => {
   const years = new Array(total).fill(0).map((_, index) => minYear + index).sort((a,b)=> b-a);
   return years;
 };
+
+export const dateIsValid = (dateStr: string) => {
+  const [year, month, day] = dateStr.split('-')
+  const date = new Date(+year, +month-1, +day)
+  return +year == date.getFullYear() && +month == date.getMonth()+1 && +day == date.getDate()
+}
